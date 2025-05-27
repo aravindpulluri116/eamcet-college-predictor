@@ -1,3 +1,4 @@
+
 import type { UserInput } from '@/types';
 
 export const RANK_CATEGORIES: UserInput['rankCategory'][] = [
@@ -17,7 +18,7 @@ export const BRANCHES: string[] = [
   "CIVIL ENGINEERING",
   "ELECTRICAL AND ELECTRONICS ENGINEERING",
   "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE",
-  "CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)",
+  "COMPUTER SCIENCE AND ENGINEERING (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)", // Corrected this line
   "COMPUTER SCIENCE AND BUSINESS SYSTEM"
   // Add more branches as needed or derive dynamically
 ];
