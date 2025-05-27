@@ -9,10 +9,12 @@ import { getCollegePrediction } from "@/app/actions";
 import { SiteHeader } from "@/components/site-header";
 import { LoadingSpinner } from "@/components/loader";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 
 export default function HomePage() {
   const [predictionResult, setPredictionResult] = useState<PredictionResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleFormSubmit = async (data: UserInput) => {
     setIsLoading(true);
@@ -20,9 +22,22 @@ export default function HomePage() {
     try {
       const result = await getCollegePrediction(data);
       setPredictionResult(result);
+      if (result.error) {
+        toast({
+          variant: "destructive",
+          title: "Prediction Error",
+          description: result.error,
+        });
+      }
     } catch (error) {
       console.error("Form submission error:", error);
-      setPredictionResult({ error: "Failed to get prediction. Please try again." });
+      const errorMessage = "Failed to get prediction. Please try again.";
+      setPredictionResult({ error: errorMessage });
+      toast({
+        variant: "destructive",
+        title: "An Unexpected Error Occurred",
+        description: errorMessage,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -71,3 +86,4 @@ export default function HomePage() {
     </div>
   );
 }
+
