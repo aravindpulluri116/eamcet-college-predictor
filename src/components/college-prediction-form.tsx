@@ -78,6 +78,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
         variant: "destructive",
         title: "Validation Error",
         description: errors.rankCategory.message || "Please select a rank category.",
+        duration: 5000,
       });
     }
     if (errors.branches) {
@@ -85,6 +86,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
         variant: "destructive",
         title: "Validation Error",
         description: errors.branches.message || "Please select at least one branch.",
+        duration: 5000,
       });
     }
      // You can add more specific toasts for other fields if needed

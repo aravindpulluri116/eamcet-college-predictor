@@ -27,6 +27,7 @@ export default function HomePage() {
           variant: "destructive",
           title: "Prediction Error",
           description: result.error,
+          duration: 5000,
         });
       }
     } catch (error) {
@@ -37,6 +38,7 @@ export default function HomePage() {
         variant: "destructive",
         title: "An Unexpected Error Occurred",
         description: errorMessage,
+        duration: 5000,
       });
     } finally {
       setIsLoading(false);
