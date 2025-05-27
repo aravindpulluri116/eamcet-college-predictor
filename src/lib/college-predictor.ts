@@ -2,6 +2,14 @@
 import type { CollegeRawData, PredictedCollege, UserInput } from '@/types';
 import collegeDataJson from '@/lib/data/college-data.json';
 
+// Helper function to normalize branch names for comparison
+function normalizeBranchName(name: string | undefined | null): string {
+  if (typeof name !== 'string') {
+    return '';
+  }
+  return name.trim().replace(/\s\s+/g, ' ').toUpperCase();
+}
+
 // This function generates the display name for the rank category (used for AI prompt and potentially UI)
 function getDisplayRankColumnName(rankCategory: UserInput['rankCategory'], gender: UserInput['gender']): string {
   if (rankCategory === "EWS") {
@@ -45,9 +53,9 @@ function parseRank(rankStr: string | number | undefined | null): number | null {
 
 export async function predictCollege(userInput: UserInput): Promise<PredictedCollege[] | null> {
   const actualDataRows = (collegeDataJson as CollegeRawData[])
-    .filter(row => 
-      row && 
-      typeof row["TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE"] === 'string' && 
+    .filter(row =>
+      row &&
+      typeof row["TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE"] === 'string' &&
       row["TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE"] !== "Inst\n Code" &&
       row["Column2"] !== "Disclaimer:" // Explicitly filter out disclaimer markers
     );
@@ -60,22 +68,23 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
   }
 
   const displayRankCategoryUsed = getDisplayRankColumnName(userInput.rankCategory, userInput.gender);
+  const normalizedUserInputBranch = normalizeBranchName(userInput.branch);
 
   const qualifiedCollegesRaw = actualDataRows
     .map(college => {
       const cutoffRankStr = college[rankJsonAccessKey];
       const cutoffRank = parseRank(cutoffRankStr);
-      return { 
-        ...college, 
-        cutoffRank, 
+      return {
+        ...college,
+        cutoffRank,
         parsedCutoffRankDisplay: cutoffRankStr !== undefined && cutoffRankStr !== null ? String(cutoffRankStr) : "N/A"
       };
     })
     .filter(college => {
-      const collegeBranchName = college["Column9"]; 
-      const branchNameMatches = typeof collegeBranchName === 'string' && 
-                                collegeBranchName.trim().toUpperCase() === userInput.branch.trim().toUpperCase();
-      
+      const collegeBranchName = college["Column9"]; // Branch Name is in Column9
+      const normalizedCollegeBranchName = normalizeBranchName(collegeBranchName);
+      const branchNameMatches = normalizedCollegeBranchName === normalizedUserInputBranch;
+
       return branchNameMatches &&
              college.cutoffRank !== null &&
              userInput.userRank <= college.cutoffRank;
@@ -90,10 +99,10 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
   const mappedQualifiedColleges: PredictedCollege[] = qualifiedCollegesRaw.map(collegeRaw => {
     const instCode = String(collegeRaw["TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE"] || "N/A");
     const collegeName = String(collegeRaw["Column2"] || "N/A");
-    const tuitionFee = String(collegeRaw["Column28"] || "N/A");
+    const tuitionFee = String(collegeRaw["Column28"] || "N/A"); // Tuition Fee in Column28
     const place = String(collegeRaw["Column3"] || "N/A");
     const district = String(collegeRaw["Column4"] || "N/A");
-    const branchName = String(collegeRaw["Column9"] || "N/A");
+    const branchName = String(collegeRaw["Column9"] || "N/A"); // Branch Name from Column9
 
     return {
       instCode,
@@ -109,6 +118,6 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
       rankCategoryUsed: displayRankCategoryUsed,
     };
   });
-  
+
   return mappedQualifiedColleges.slice(0, 20); // Return top 20 or fewer
 }
