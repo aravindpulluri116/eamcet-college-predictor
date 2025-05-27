@@ -11,6 +11,7 @@ import { LoadingSpinner } from "@/components/loader";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Instagram, Linkedin } from "lucide-react";
 
 export default function HomePage() {
   const [predictionResult, setPredictionResult] = useState<PredictionResult | null>(null);
@@ -87,9 +88,29 @@ export default function HomePage() {
           )}
         </div>
       </main>
-      <footer className="py-6 text-center text-sm text-muted-foreground border-t">
-        <div className="container">
-          © {new Date().getFullYear()} College Compass. All rights reserved.
+      <footer className="py-6 text-center text-muted-foreground border-t">
+        <div className="container flex flex-col md:flex-row justify-between items-center">
+          <p>© {new Date().getFullYear()} College Compass. All rights reserved.</p>
+          <div className="flex space-x-4 mt-4 md:mt-0">
+            <a
+              href="https://www.instagram.com/techy.aravind/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+              aria-label="Instagram"
+            >
+              <Instagram className="h-5 w-5" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/aravind-pulluri-101291334/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="h-5 w-5" />
+            </a>
+          </div>
         </div>
       </footer>
     </div>
