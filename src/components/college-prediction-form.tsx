@@ -22,17 +22,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RANK_CATEGORIES, GENDERS, BRANCHES, ALL_BRANCHES_IDENTIFIER } from "@/lib/constants";
 import type { UserInput } from "@/types";
+import { ChevronDown } from "lucide-react";
 
 const formSchema = z.object({
   userRank: z.coerce.number().positive({ message: "Rank must be a positive number." }),
   rankCategory: z.enum(RANK_CATEGORIES as [string, ...string[]], {
     required_error: "Please select a rank category.",
   }).refine(value => value !== "", { message: "Please select a rank category." }),
-  gender: z.enum(["BOYS", "GIRLS"] as [string, ...string[]], { 
+  gender: z.enum(GENDERS.map(g => g.value) as [string, ...string[]], {
     required_error: "Please select a gender.",
   }).refine(value => value !== "", { message: "Please select a gender." }),
   branches: z.array(z.string()).refine(value => value.length > 0, { message: "Please select at least one branch or 'All Branches'." }),
@@ -50,9 +58,9 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
   const form = useForm<CollegePredictionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userRank: undefined, 
-      rankCategory: "", 
-      gender: "", 
+      userRank: undefined,
+      rankCategory: "",
+      gender: "",
       branches: [],
       userPreferences: "",
     },
@@ -61,14 +69,19 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
   const handleFormSubmit = (values: CollegePredictionFormValues) => {
     const userInput: UserInput = {
       ...values,
-      rankCategory: values.rankCategory as UserInput['rankCategory'], 
-      gender: values.gender as UserInput['gender'],
-      branches: values.branches,
+      // rankCategory and gender enums are correctly inferred
     };
     onSubmit(userInput);
   };
 
-  const currentSelectedBranches = form.watch("branches");
+  const selectedBranches = form.watch("branches");
+
+  const getBranchButtonLabel = () => {
+    if (selectedBranches.length === 0) return "Select Branches";
+    if (selectedBranches.includes(ALL_BRANCHES_IDENTIFIER)) return "All Branches";
+    if (selectedBranches.length === 1) return selectedBranches[0];
+    return `${selectedBranches.length} Branches Selected`;
+  };
 
   return (
     <Form {...form}>
@@ -85,7 +98,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
                     type="number"
                     placeholder="Enter your TGEAPCET rank"
                     {...field}
-                    value={field.value ?? ''} 
+                    value={field.value ?? ''}
                   />
                 </FormControl>
                 <FormDescription>
@@ -143,7 +156,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
               </FormItem>
             )}
           />
-          {/* Branches Field - Replaces the old single Select for branch */}
+
           <FormField
             control={form.control}
             name="branches"
@@ -155,44 +168,44 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
                     Select one or more branches, or choose "All Branches".
                   </FormDescription>
                 </div>
-                
-                <FormItem className="flex flex-row items-center space-x-3 space-y-0 mb-3 p-2 border rounded-md">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value?.includes(ALL_BRANCHES_IDENTIFIER)}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="w-full justify-between">
+                      {getBranchButtonLabel()}
+                      <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width] max-h-80 overflow-y-auto">
+                    <DropdownMenuLabel>Select Branches</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuCheckboxItem
+                      checked={selectedBranches.includes(ALL_BRANCHES_IDENTIFIER)}
                       onCheckedChange={(isChecked) => {
                         field.onChange(isChecked ? [ALL_BRANCHES_IDENTIFIER] : []);
                       }}
-                    />
-                  </FormControl>
-                  <FormLabel className="font-normal">
-                    All Branches
-                  </FormLabel>
-                </FormItem>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 max-h-60 overflow-y-auto p-2 border rounded-md">
-                  {BRANCHES.map((branchName) => (
-                    <FormItem key={branchName} className="flex flex-row items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value?.includes(branchName)}
-                          disabled={currentSelectedBranches?.includes(ALL_BRANCHES_IDENTIFIER)}
-                          onCheckedChange={(isChecked) => {
-                            const currentSelection = field.value?.filter(b => b !== ALL_BRANCHES_IDENTIFIER) || [];
-                            if (isChecked) {
-                              field.onChange([...currentSelection, branchName]);
-                            } else {
-                              field.onChange(currentSelection.filter((b) => b !== branchName));
-                            }
-                          }}
-                        />
-                      </FormControl>
-                      <FormLabel className="font-normal text-sm">
+                    >
+                      All Branches
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuSeparator />
+                    {BRANCHES.map((branchName) => (
+                      <DropdownMenuCheckboxItem
+                        key={branchName}
+                        checked={selectedBranches.includes(branchName)}
+                        disabled={selectedBranches.includes(ALL_BRANCHES_IDENTIFIER)}
+                        onCheckedChange={(isChecked) => {
+                          const currentSelection = field.value?.filter(b => b !== ALL_BRANCHES_IDENTIFIER) || [];
+                          if (isChecked) {
+                            field.onChange([...currentSelection, branchName]);
+                          } else {
+                            field.onChange(currentSelection.filter((b) => b !== branchName));
+                          }
+                        }}
+                      >
                         {branchName}
-                      </FormLabel>
-                    </FormItem>
-                  ))}
-                </div>
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <FormMessage />
               </FormItem>
             )}
