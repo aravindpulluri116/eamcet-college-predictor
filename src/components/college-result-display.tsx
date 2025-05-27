@@ -3,7 +3,7 @@ import type { PredictionResult, PredictedCollege } from "@/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, BookOpen, Users, DollarSign, TrendingUp, CheckCircle, Info, ListChecks, Code } from "lucide-react";
+import { MapPin, BookOpen, Users, IndianRupee, TrendingUp, CheckCircle, Info, ListChecks, Code } from "lucide-react";
 
 interface CollegeResultDisplayProps {
   result: PredictionResult;
@@ -64,7 +64,7 @@ export function CollegeResultDisplay({ result }: CollegeResultDisplayProps) {
                 <span className="flex-grow">Location: {college.location.place}, {college.location.district}</span>
               </div>
               <div className="flex items-start">
-                <DollarSign className="h-5 w-5 mr-2 text-muted-foreground flex-shrink-0 mt-0.5" />
+                <IndianRupee className="h-5 w-5 mr-2 text-muted-foreground flex-shrink-0 mt-0.5" />
                 <span className="flex-grow">Tuition Fee: {college.tuitionFee} INR</span>
               </div>
               <div className="flex items-start">
