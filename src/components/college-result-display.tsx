@@ -36,11 +36,14 @@ export function CollegeResultDisplay({ result }: CollegeResultDisplayProps) {
     <div className="mt-8 space-y-6">
       <h3 className="text-xl font-semibold mb-4 text-center flex items-center justify-center">
         <ListChecks className="mr-2 h-6 w-6 text-primary" />
-        {colleges.length === 1 ? "Your Predicted College Match" : `Your Top ${colleges.length > 20 ? 20 : colleges.length} College Matches`}
+        {colleges.length === 1 ? "Your Predicted College Match" : `Your Top ${colleges.length > 50 ? 50 : colleges.length} College Matches`}
       </h3>
       
       {colleges.map((college, index) => (
-        <Card key={`${college.instCode}-${college.branchName}-${index}`} className="shadow-lg">
+        <Card 
+          key={`${college.instCode}-${college.branchName}-${index}`} 
+          className="shadow-lg transition-all duration-200 ease-in-out hover:shadow-xl hover:ring-2 hover:ring-primary hover:ring-offset-2 hover:scale-[1.01]"
+        >
           <CardHeader>
             <CardTitle className="text-xl md:text-2xl text-primary flex items-center">
               {index === 0 && <CheckCircle className="mr-2 h-6 w-6 md:h-7 md:w-7 text-accent flex-shrink-0" />}
@@ -77,7 +80,7 @@ export function CollegeResultDisplay({ result }: CollegeResultDisplayProps) {
       ))}
 
       {summary?.summary && (
-        <Card className="shadow-lg">
+        <Card className="shadow-lg transition-all duration-200 ease-in-out hover:shadow-xl hover:ring-2 hover:ring-primary hover:ring-offset-2 hover:scale-[1.01]">
           <CardHeader>
             <CardTitle className="text-xl text-primary flex items-center">
               <Info className="mr-2 h-6 w-6" /> AI-Powered Summary for Top Match
@@ -90,7 +93,7 @@ export function CollegeResultDisplay({ result }: CollegeResultDisplayProps) {
       )}
 
       {analysis?.analysis && (
-        <Card className="shadow-lg">
+        <Card className="shadow-lg transition-all duration-200 ease-in-out hover:shadow-xl hover:ring-2 hover:ring-primary hover:ring-offset-2 hover:scale-[1.01]">
           <CardHeader>
             <CardTitle className="text-xl text-primary flex items-center">
               <TrendingUp className="mr-2 h-6 w-6" /> AI Rank Trend Analysis for Top Match Branch

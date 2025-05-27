@@ -52,7 +52,7 @@ export default function HomePage() {
       <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
         <div className="max-w-3xl mx-auto">
           <section aria-labelledby="form-section-title" className="mb-12 animate-fade-in-up">
-            <Card className="shadow-lg">
+            <Card className="shadow-lg transition-all duration-200 ease-in-out hover:shadow-xl">
               <CardHeader className="text-center">
                 <CardTitle id="form-section-title" className="text-3xl font-bold tracking-tight text-primary mb-2">
                   Find Your Ideal College
