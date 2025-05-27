@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 94.1%; /* #F0F0F0 */
-    --foreground: 0 0% 20%; /* Dark Gray for readability */
+    --background: 210 40% 98%; /* Very light cool blue */
+    --foreground: 210 10% 23%; /* Dark cool grey for readability */
 
     --card: 0 0% 100%; /* White */
-    --card-foreground: 0 0% 20%;
+    --card-foreground: 210 10% 23%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 20%;
+    --popover-foreground: 210 10% 23%;
 
-    --primary: 192 38.3% 43.3%; /* #468B97 */
-    --primary-foreground: 192 38.3% 95%; /* Light color for contrast */
+    --primary: 200 70% 50%; /* Vibrant Blue */
+    --primary-foreground: 200 70% 95%; /* Light color for contrast on primary */
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 210 30% 94%; /* Lighter grey for secondary elements */
+    --secondary-foreground: 210 10% 30%; /* Darker grey for secondary text */
 
-    --muted: 0 0% 90%; /* Adjusted for better visibility on light bg */
-    --muted-foreground: 0 0% 45.1%;
+    --muted: 210 30% 90%; /* Light grey for muted elements */
+    --muted-foreground: 210 15% 45%; /* Medium grey for muted text */
 
-    --accent: 120 32.1% 54.5%; /* #64B264 */
-    --accent-foreground: 120 32.1% 95%; /* Light color for contrast */
+    --accent: 30 90% 55%; /* Vibrant Orange */
+    --accent-foreground: 30 90% 95%; /* Light color for contrast on accent */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 85%; /* Adjusted for better visibility */
-    --input: 0 0% 89.8%;
-    --ring: 192 38.3% 43.3%; /* Using primary color for ring */
+    --border: 210 20% 85%; /* Softer border color */
+    --input: 210 20% 92%; /* Light grey for input backgrounds */
+    --ring: 200 70% 60%; /* Slightly lighter primary for ring */
 
     --radius: 0.5rem;
 
@@ -41,55 +41,55 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     
-    /* Sidebar specific colors - kept as is, but can be themed if sidebar is added */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar specific colors */
+    --sidebar-background: 210 30% 96%;
+    --sidebar-foreground: 210 10% 28%;
+    --sidebar-primary: 200 70% 45%;
+    --sidebar-primary-foreground: 200 70% 95%;
+    --sidebar-accent: 30 90% 50%;
+    --sidebar-accent-foreground: 30 90% 95%;
+    --sidebar-border: 210 20% 88%;
+    --sidebar-ring: 200 70% 55%;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 210 20% 12%; /* Dark cool grey */
+    --foreground: 210 20% 90%; /* Light grey for text */
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 210 20% 18%; /* Slightly lighter dark grey for cards */
+    --card-foreground: 210 20% 90%;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 210 20% 18%;
+    --popover-foreground: 210 20% 90%;
 
-    --primary: 192 38.3% 55.3%; /* Adjusted primary for dark mode */
-    --primary-foreground: 192 38.3% 15%;
+    --primary: 200 70% 60%; /* Lighter vibrant blue for dark mode */
+    --primary-foreground: 200 70% 10%; /* Dark for contrast on light blue */
 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 15% 20%; /* Darker grey for secondary elements */
+    --secondary-foreground: 210 15% 85%; /* Lighter grey for secondary text */
 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted: 210 15% 25%; /* Dark grey for muted elements */
+    --muted-foreground: 210 15% 65%; /* Medium grey for muted text */
 
-    --accent: 120 32.1% 60.5%; /* Adjusted accent for dark mode */
-    --accent-foreground: 120 32.1% 15%;
+    --accent: 30 90% 65%; /* Lighter vibrant orange for dark mode */
+    --accent-foreground: 30 90% 10%; /* Dark for contrast on light orange */
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 192 38.3% 50.3%;
+    --border: 210 15% 30%; /* Darker border color */
+    --input: 210 15% 22%; /* Dark grey for input backgrounds */
+    --ring: 200 70% 70%; /* Lighter primary for ring in dark mode */
 
     /* Sidebar dark theme colors */
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 210 20% 15%;
+    --sidebar-foreground: 210 20% 88%;
+    --sidebar-primary: 200 70% 65%;
+    --sidebar-primary-foreground: 200 70% 10%;
+    --sidebar-accent: 30 90% 60%;
+    --sidebar-accent-foreground: 30 90% 10%;
+    --sidebar-border: 210 15% 25%;
+    --sidebar-ring: 200 70% 65%;
   }
 }
 
@@ -99,6 +99,5 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Removed explicit font-family to rely on layout.tsx */
   }
 }

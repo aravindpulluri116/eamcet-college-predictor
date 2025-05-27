@@ -51,7 +51,7 @@ export default function HomePage() {
       <SiteHeader />
       <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
         <div className="max-w-3xl mx-auto">
-          <section aria-labelledby="form-section-title" className="mb-12">
+          <section aria-labelledby="form-section-title" className="mb-12 animate-fade-in-up">
             <Card className="shadow-lg">
               <CardHeader className="text-center">
                 <CardTitle id="form-section-title" className="text-3xl font-bold tracking-tight text-primary mb-2">
@@ -68,7 +68,7 @@ export default function HomePage() {
           </section>
 
           {isLoading && (
-            <div className="flex flex-col items-center justify-center space-y-2 mt-10">
+            <div className="flex flex-col items-center justify-center space-y-2 mt-10 animate-fade-in-up">
               <LoadingSpinner size={32}/>
               <p className="text-muted-foreground">Analyzing data and predicting your college...</p>
             </div>
@@ -77,7 +77,7 @@ export default function HomePage() {
           {predictionResult && !isLoading && (
             <>
             <Separator className="my-8" />
-            <section aria-labelledby="results-section-title">
+            <section aria-labelledby="results-section-title" className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <h2 id="results-section-title" className="text-2xl font-semibold tracking-tight text-center mb-6">
                 Prediction Results
               </h2>
