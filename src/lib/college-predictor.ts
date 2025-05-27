@@ -24,30 +24,26 @@ function getActualRankColumnKey(rankCategory: UserInput['rankCategory'], gender:
   return null;
 }
 
-function parseRank(rankStr: string | number | undefined): number | null {
+function parseRank(rankStr: string | number | undefined | null): number | null {
   if (rankStr === undefined || rankStr === null) {
     return null;
   }
   if (typeof rankStr === 'number') {
-    // If it's already a number, return it if it's not NaN, otherwise null
     return !isNaN(rankStr) ? rankStr : null;
   }
-  // If it's a string, process it
   if (typeof rankStr === 'string') {
     const trimmedRankStr = rankStr.trim();
-    if (trimmedRankStr.toUpperCase() === "NA" || trimmedRankStr === "") {
+    if (trimmedRankStr.toUpperCase() === "NA" || trimmedRankStr === "" || trimmedRankStr === "-") { // Added "-" as a possible non-rank marker
       return null;
     }
     const parsed = parseInt(trimmedRankStr, 10);
     return !isNaN(parsed) ? parsed : null;
   }
-  // If it's neither number, string, undefined, nor null (shouldn't happen with current types)
   return null;
 }
 
 
-export async function predictCollege(userInput: UserInput): Promise<PredictedCollege | null> {
-  // Filter out header, nulls, and disclaimer rows
+export async function predictCollege(userInput: UserInput): Promise<PredictedCollege[] | null> {
   const actualDataRows = (collegeDataJson as CollegeRawData[])
     .filter(row => 
       row && 
@@ -65,18 +61,18 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
 
   const displayRankCategoryUsed = getDisplayRankColumnName(userInput.rankCategory, userInput.gender);
 
-  const qualifiedColleges = actualDataRows
+  const qualifiedCollegesRaw = actualDataRows
     .map(college => {
       const cutoffRankStr = college[rankJsonAccessKey];
       const cutoffRank = parseRank(cutoffRankStr);
       return { 
-        ...college, // Keep all original data from the row
-        cutoffRank, // Parsed numeric rank
-        parsedCutoffRankDisplay: cutoffRankStr !== undefined && cutoffRankStr !== null ? String(cutoffRankStr) : "N/A" // Store original for display
+        ...college, 
+        cutoffRank, 
+        parsedCutoffRankDisplay: cutoffRankStr !== undefined && cutoffRankStr !== null ? String(cutoffRankStr) : "N/A"
       };
     })
     .filter(college => {
-      const collegeBranchName = college["Column9"]; // Branch Name from JSON
+      const collegeBranchName = college["Column9"]; 
       const branchNameMatches = typeof collegeBranchName === 'string' && 
                                 collegeBranchName.trim().toUpperCase() === userInput.branch.trim().toUpperCase();
       
@@ -85,32 +81,32 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
              userInput.userRank <= college.cutoffRank;
     });
 
-  if (qualifiedColleges.length === 0) {
+  if (qualifiedCollegesRaw.length === 0) {
     return null;
   }
 
-  // Sort by cutoffRank (ascending - lower rank is better)
-  qualifiedColleges.sort((a, b) => (a.cutoffRank!) - (b.cutoffRank!));
+  qualifiedCollegesRaw.sort((a, b) => (a.cutoffRank!) - (b.cutoffRank!));
 
-  const topCollegeRaw = qualifiedColleges[0];
+  const mappedQualifiedColleges: PredictedCollege[] = qualifiedCollegesRaw.map(collegeRaw => {
+    const collegeName = String(collegeRaw["Column2"] || "N/A");
+    const tuitionFee = String(collegeRaw["Column28"] || "N/A");
+    const place = String(collegeRaw["Column3"] || "N/A");
+    const district = String(collegeRaw["Column4"] || "N/A");
+    const branchName = String(collegeRaw["Column9"] || "N/A");
 
-  // Ensure all fields being accessed for the result exist or provide defaults
-  const collegeName = String(topCollegeRaw["Column2"] || "N/A"); // Institute Name
-  const tuitionFee = String(topCollegeRaw["Column28"] || "N/A");  // Tuition Fee
-  const place = String(topCollegeRaw["Column3"] || "N/A"); // Place
-  const district = String(topCollegeRaw["Column4"] || "N/A"); // Dist Code
-  const branchName = String(topCollegeRaw["Column9"] || "N/A"); // Branch Name
-
-  return {
-    collegeName,
-    tuitionFee,
-    cutoffRank: topCollegeRaw.cutoffRank!, // Already confirmed not null by filter
-    parsedCutoffRankDisplay: topCollegeRaw.parsedCutoffRankDisplay,
-    location: {
-      place,
-      district,
-    },
-    branchName,
-    rankCategoryUsed: displayRankCategoryUsed 
-  };
+    return {
+      collegeName,
+      tuitionFee,
+      cutoffRank: collegeRaw.cutoffRank!,
+      parsedCutoffRankDisplay: collegeRaw.parsedCutoffRankDisplay,
+      location: {
+        place,
+        district,
+      },
+      branchName,
+      rankCategoryUsed: displayRankCategoryUsed,
+    };
+  });
+  
+  return mappedQualifiedColleges.slice(0, 20); // Return top 20 or fewer
 }

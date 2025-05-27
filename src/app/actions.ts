@@ -2,36 +2,38 @@
 "use server";
 
 import type { UserInput, PredictedCollege, PredictionResult } from "@/types";
-import { predictCollege as findCollege } from "@/lib/college-predictor";
+import { predictCollege as findColleges } from "@/lib/college-predictor"; // Renamed to findColleges
 import { analyzeRank, type AnalyzeRankInput, type AnalyzeRankOutput } from "@/ai/flows/rank-analysis";
 import { collegeSummary, type CollegeSummaryInput, type CollegeSummaryOutput } from "@/ai/flows/college-summary";
 
 export async function getCollegePrediction(userInput: UserInput): Promise<PredictionResult> {
   try {
-    const college = await findCollege(userInput);
+    const colleges = await findColleges(userInput); // Changed from college to colleges
 
-    if (!college) {
+    if (!colleges || colleges.length === 0) { // Check if array is null or empty
       return { error: "No suitable colleges found matching your criteria. Please try different options." };
     }
 
     let rankAnalysisResult: AnalyzeRankOutput | undefined;
     let collegeSummaryResult: CollegeSummaryOutput | undefined;
 
-    // Prepare inputs for AI flows
+    // Use the top college for AI analysis and summary
+    const topCollege = colleges[0];
+
     const analyzeRankInput: AnalyzeRankInput = {
       rankCategory: userInput.rankCategory,
       gender: userInput.gender,
-      branch: college.branchName,
+      branch: topCollege.branchName, // Use topCollege's branch
     };
 
     const collegeSummaryInput: CollegeSummaryInput = {
       collegeDetails: {
-        collegeName: college.collegeName,
-        tuitionFee: college.tuitionFee,
-        cutoffRank: college.parsedCutoffRankDisplay, // Use string display version
+        collegeName: topCollege.collegeName,
+        tuitionFee: topCollege.tuitionFee,
+        cutoffRank: topCollege.parsedCutoffRankDisplay,
         location: {
-          place: college.location.place,
-          district: college.location.district,
+          place: topCollege.location.place,
+          district: topCollege.location.district,
         },
       },
       userPreferences: userInput.userPreferences,
@@ -47,11 +49,10 @@ export async function getCollegePrediction(userInput: UserInput): Promise<Predic
     } catch (aiError) {
         console.error("AI Flow Error:", aiError);
         // Non-critical error, proceed with college info
-        // Optionally, include a partial error message for AI features
     }
 
     return {
-      college,
+      colleges, // Return the array of colleges
       analysis: rankAnalysisResult,
       summary: collegeSummaryResult,
     };

@@ -31,7 +31,7 @@ export interface CollegeRawData {
   "Column29"?: string | number; // Affiliated To
   // Adding this to allow for any other unexpected keys without breaking typing,
   // though ideally all used keys should be explicitly defined.
-  [key: string]: string | number | undefined;
+  [key: string]: string | number | undefined | null; // Added null to handle potential null values from JSON
 }
 
 export interface UserInput {
@@ -56,8 +56,9 @@ export interface PredictedCollege {
 }
 
 export interface PredictionResult {
-  college?: PredictedCollege;
+  colleges?: PredictedCollege[]; // Changed from college to colleges and made it an array
   analysis?: { analysis: string };
   summary?: { summary: string };
   error?: string;
 }
+
