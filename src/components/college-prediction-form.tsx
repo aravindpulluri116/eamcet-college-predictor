@@ -1,7 +1,7 @@
 
 "use client";
 
-import * as z from "zod"; // Changed from "import type * as z from "zod";"
+import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
   const form = useForm<CollegePredictionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userRank: undefined,
+      userRank: undefined, // react-hook-form will handle undefined internally
       rankCategory: undefined,
       gender: undefined,
       branch: "",
@@ -78,7 +78,12 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
               <FormItem>
                 <FormLabel>Your Rank</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Enter your TGEAPCET rank" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="Enter your TGEAPCET rank"
+                    {...field}
+                    value={field.value ?? ''} // Ensures input is controlled from the start
+                  />
                 </FormControl>
                 <FormDescription>
                   Your overall rank in the TGEAPCET exam.
