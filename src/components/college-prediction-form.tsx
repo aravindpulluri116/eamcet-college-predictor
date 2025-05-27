@@ -183,6 +183,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
                       onCheckedChange={(isChecked) => {
                         field.onChange(isChecked ? [ALL_BRANCHES_IDENTIFIER] : []);
                       }}
+                      onSelect={(e) => e.preventDefault()} // Keep menu open
                     >
                       All Branches
                     </DropdownMenuCheckboxItem>
@@ -200,6 +201,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
                             field.onChange(currentSelection.filter((b) => b !== branchName));
                           }
                         }}
+                        onSelect={(e) => e.preventDefault()} // Keep menu open
                       >
                         {branchName}
                       </DropdownMenuCheckboxItem>
@@ -238,3 +240,5 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
     </Form>
   );
 }
+
+    
