@@ -3,7 +3,7 @@ import type { PredictionResult, PredictedCollege } from "@/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, BookOpen, Users, DollarSign, TrendingUp, CheckCircle, Info, ListChecks } from "lucide-react";
+import { MapPin, BookOpen, Users, DollarSign, TrendingUp, CheckCircle, Info, ListChecks, Code } from "lucide-react";
 
 interface CollegeResultDisplayProps {
   result: PredictionResult;
@@ -40,7 +40,7 @@ export function CollegeResultDisplay({ result }: CollegeResultDisplayProps) {
       </h3>
       
       {colleges.map((college, index) => (
-        <Card key={`${college.collegeName}-${college.branchName}-${index}`} className="shadow-lg">
+        <Card key={`${college.instCode}-${college.branchName}-${index}`} className="shadow-lg">
           <CardHeader>
             <CardTitle className="text-xl md:text-2xl text-primary flex items-center">
               {index === 0 && <CheckCircle className="mr-2 h-6 w-6 md:h-7 md:w-7 text-accent flex-shrink-0" />}
@@ -52,12 +52,16 @@ export function CollegeResultDisplay({ result }: CollegeResultDisplayProps) {
           <CardContent className="space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="flex items-start">
-                <MapPin className="h-5 w-5 mr-2 text-muted-foreground flex-shrink-0 mt-0.5" />
-                <span className="flex-grow">Location: {college.location.place}, {college.location.district}</span>
+                <Code className="h-5 w-5 mr-2 text-muted-foreground flex-shrink-0 mt-0.5" />
+                <span className="flex-grow">EAMCET Code: <Badge variant="outline">{college.instCode}</Badge></span>
               </div>
               <div className="flex items-start">
                 <BookOpen className="h-5 w-5 mr-2 text-muted-foreground flex-shrink-0 mt-0.5" />
                 <span className="flex-grow">Branch: {college.branchName}</span>
+              </div>
+              <div className="flex items-start">
+                <MapPin className="h-5 w-5 mr-2 text-muted-foreground flex-shrink-0 mt-0.5" />
+                <span className="flex-grow">Location: {college.location.place}, {college.location.district}</span>
               </div>
               <div className="flex items-start">
                 <DollarSign className="h-5 w-5 mr-2 text-muted-foreground flex-shrink-0 mt-0.5" />

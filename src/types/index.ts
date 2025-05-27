@@ -43,6 +43,7 @@ export interface UserInput {
 }
 
 export interface PredictedCollege {
+  instCode: string;
   collegeName: string;
   tuitionFee: string;
   cutoffRank: number; // Storing as number after parsing
@@ -56,9 +57,8 @@ export interface PredictedCollege {
 }
 
 export interface PredictionResult {
-  colleges?: PredictedCollege[]; // Changed from college to colleges and made it an array
+  colleges?: PredictedCollege[];
   analysis?: { analysis: string };
   summary?: { summary: string };
   error?: string;
 }
-

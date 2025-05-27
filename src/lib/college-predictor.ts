@@ -88,6 +88,7 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
   qualifiedCollegesRaw.sort((a, b) => (a.cutoffRank!) - (b.cutoffRank!));
 
   const mappedQualifiedColleges: PredictedCollege[] = qualifiedCollegesRaw.map(collegeRaw => {
+    const instCode = String(collegeRaw["TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE"] || "N/A");
     const collegeName = String(collegeRaw["Column2"] || "N/A");
     const tuitionFee = String(collegeRaw["Column28"] || "N/A");
     const place = String(collegeRaw["Column3"] || "N/A");
@@ -95,6 +96,7 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
     const branchName = String(collegeRaw["Column9"] || "N/A");
 
     return {
+      instCode,
       collegeName,
       tuitionFee,
       cutoffRank: collegeRaw.cutoffRank!,

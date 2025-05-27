@@ -28,6 +28,7 @@ export async function getCollegePrediction(userInput: UserInput): Promise<Predic
 
     const collegeSummaryInput: CollegeSummaryInput = {
       collegeDetails: {
+        instCode: topCollege.instCode,
         collegeName: topCollege.collegeName,
         tuitionFee: topCollege.tuitionFee,
         cutoffRank: topCollege.parsedCutoffRankDisplay,

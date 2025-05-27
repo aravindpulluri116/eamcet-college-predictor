@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -13,6 +14,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const CollegeDetailsSchema = z.object({
+  instCode: z.string().describe('The EAMCET code of the college.'),
   collegeName: z.string().describe('The name of the college.'),
   tuitionFee: z.string().describe('The tuition fee of the college.'),
   cutoffRank: z.string().describe('The cutoff rank for the college.'),
@@ -46,6 +48,7 @@ const collegeSummaryPrompt = ai.definePrompt({
   prompt: `You are an expert college advisor. Summarize the following college details, highlighting its best features, potential drawbacks, and overall suitability based on the user's preferences. Provide a balanced perspective to help the student quickly understand if the college is a good fit.
 
 College Details:
+Institute Code: {{{collegeDetails.instCode}}}
 College Name: {{{collegeDetails.collegeName}}}
 Tuition Fee: {{{collegeDetails.tuitionFee}}}
 Cutoff Rank: {{{collegeDetails.cutoffRank}}}
