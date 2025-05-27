@@ -23,7 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { RANK_CATEGORIES, GENDERS, BRANCHES } from "@/lib/constants";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RANK_CATEGORIES, GENDERS, BRANCHES, ALL_BRANCHES_IDENTIFIER } from "@/lib/constants";
 import type { UserInput } from "@/types";
 
 const formSchema = z.object({
@@ -31,10 +32,10 @@ const formSchema = z.object({
   rankCategory: z.enum(RANK_CATEGORIES as [string, ...string[]], {
     required_error: "Please select a rank category.",
   }).refine(value => value !== "", { message: "Please select a rank category." }),
-  gender: z.enum(["BOYS", "GIRLS"] as [string, ...string[]], { // Added [string, ...string[]] type assertion for Zod enum with non-empty array
+  gender: z.enum(["BOYS", "GIRLS"] as [string, ...string[]], { 
     required_error: "Please select a gender.",
   }).refine(value => value !== "", { message: "Please select a gender." }),
-  branch: z.string().min(1, { message: "Please select or enter a branch." }),
+  branches: z.array(z.string()).refine(value => value.length > 0, { message: "Please select at least one branch or 'All Branches'." }),
   userPreferences: z.string().min(10, { message: "Please describe your preferences (min 10 characters)." }).max(500, { message: "Preferences cannot exceed 500 characters." }),
 });
 
@@ -50,23 +51,24 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
     resolver: zodResolver(formSchema),
     defaultValues: {
       userRank: undefined, 
-      rankCategory: "", // Initialize with empty string
-      gender: "", // Initialize with empty string
-      branch: "",
+      rankCategory: "", 
+      gender: "", 
+      branches: [],
       userPreferences: "",
     },
   });
 
   const handleFormSubmit = (values: CollegePredictionFormValues) => {
-    // Ensure rankCategory and gender are correctly typed for UserInput
     const userInput: UserInput = {
       ...values,
-      // Zod schema ensures these are valid non-empty strings if form is valid
       rankCategory: values.rankCategory as UserInput['rankCategory'], 
       gender: values.gender as UserInput['gender'],
+      branches: values.branches,
     };
     onSubmit(userInput);
   };
+
+  const currentSelectedBranches = form.watch("branches");
 
   return (
     <Form {...form}>
@@ -141,29 +143,56 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
               </FormItem>
             )}
           />
+          {/* Branches Field - Replaces the old single Select for branch */}
           <FormField
             control={form.control}
-            name="branch"
+            name="branches"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Preferred Branch</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+              <FormItem className="md:col-span-2">
+                <div className="mb-2">
+                  <FormLabel>Preferred Branches</FormLabel>
+                  <FormDescription>
+                    Select one or more branches, or choose "All Branches".
+                  </FormDescription>
+                </div>
+                
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0 mb-3 p-2 border rounded-md">
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select your preferred branch" />
-                    </SelectTrigger>
+                    <Checkbox
+                      checked={field.value?.includes(ALL_BRANCHES_IDENTIFIER)}
+                      onCheckedChange={(isChecked) => {
+                        field.onChange(isChecked ? [ALL_BRANCHES_IDENTIFIER] : []);
+                      }}
+                    />
                   </FormControl>
-                  <SelectContent>
-                    {BRANCHES.map((branch) => (
-                      <SelectItem key={branch} value={branch}>
-                        {branch}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                 <FormDescription>
-                  Choose from the list. If not available, type it. The data is limited to listed branches.
-                </FormDescription>
+                  <FormLabel className="font-normal">
+                    All Branches
+                  </FormLabel>
+                </FormItem>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 max-h-60 overflow-y-auto p-2 border rounded-md">
+                  {BRANCHES.map((branchName) => (
+                    <FormItem key={branchName} className="flex flex-row items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value?.includes(branchName)}
+                          disabled={currentSelectedBranches?.includes(ALL_BRANCHES_IDENTIFIER)}
+                          onCheckedChange={(isChecked) => {
+                            const currentSelection = field.value?.filter(b => b !== ALL_BRANCHES_IDENTIFIER) || [];
+                            if (isChecked) {
+                              field.onChange([...currentSelection, branchName]);
+                            } else {
+                              field.onChange(currentSelection.filter((b) => b !== branchName));
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="font-normal text-sm">
+                        {branchName}
+                      </FormLabel>
+                    </FormItem>
+                  ))}
+                </div>
                 <FormMessage />
               </FormItem>
             )}

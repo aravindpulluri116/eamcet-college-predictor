@@ -38,7 +38,7 @@ export interface UserInput {
   userRank: number;
   rankCategory: "OC" | "BC_A" | "BC_B" | "BC_C" | "BC_D" | "BC_E" | "SC" | "ST" | "EWS";
   gender: "BOYS" | "GIRLS";
-  branch: string;
+  branches: string[]; // Changed from branch: string
   userPreferences: string;
 }
 

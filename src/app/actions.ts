@@ -2,29 +2,44 @@
 "use server";
 
 import type { UserInput, PredictedCollege, PredictionResult } from "@/types";
-import { predictCollege as findColleges } from "@/lib/college-predictor"; // Renamed to findColleges
+import { predictCollege as findColleges } from "@/lib/college-predictor"; 
 import { analyzeRank, type AnalyzeRankInput, type AnalyzeRankOutput } from "@/ai/flows/rank-analysis";
 import { collegeSummary, type CollegeSummaryInput, type CollegeSummaryOutput } from "@/ai/flows/college-summary";
+import { ALL_BRANCHES_IDENTIFIER } from "@/lib/constants";
 
 export async function getCollegePrediction(userInput: UserInput): Promise<PredictionResult> {
   try {
-    const colleges = await findColleges(userInput); // Changed from college to colleges
+    const colleges = await findColleges(userInput); 
 
-    if (!colleges || colleges.length === 0) { // Check if array is null or empty
+    if (!colleges || colleges.length === 0) { 
       return { error: "No suitable colleges found matching your criteria. Please try different options." };
     }
 
     let rankAnalysisResult: AnalyzeRankOutput | undefined;
     let collegeSummaryResult: CollegeSummaryOutput | undefined;
 
-    // Use the top college for AI analysis and summary
     const topCollege = colleges[0];
+
+    const branchForAnalysis = userInput.branches.includes(ALL_BRANCHES_IDENTIFIER) || userInput.branches.length > 1
+                             ? topCollege.branchName
+                             : userInput.branches[0];
 
     const analyzeRankInput: AnalyzeRankInput = {
       rankCategory: userInput.rankCategory,
       gender: userInput.gender,
-      branch: topCollege.branchName, // Use topCollege's branch
+      branch: branchForAnalysis,
     };
+
+    let preferencesString = userInput.userPreferences;
+    if (userInput.branches.includes(ALL_BRANCHES_IDENTIFIER)) {
+        preferencesString += " The user is open to all branches.";
+    } else if (userInput.branches.length > 1) {
+        preferencesString += ` The user is interested in the following branches: ${userInput.branches.join(', ')}.`;
+    } else if (userInput.branches.length === 1) {
+        // No explicit addition needed if single branch, it's implied or can be added if desired:
+        // preferencesString += ` The user's primary preferred branch is ${userInput.branches[0]}.`;
+    }
+
 
     const collegeSummaryInput: CollegeSummaryInput = {
       collegeDetails: {
@@ -37,7 +52,7 @@ export async function getCollegePrediction(userInput: UserInput): Promise<Predic
           district: topCollege.location.district,
         },
       },
-      userPreferences: userInput.userPreferences,
+      userPreferences: preferencesString,
     };
     
     try {
@@ -53,7 +68,7 @@ export async function getCollegePrediction(userInput: UserInput): Promise<Predic
     }
 
     return {
-      colleges, // Return the array of colleges
+      colleges, 
       analysis: rankAnalysisResult,
       summary: collegeSummaryResult,
     };
