@@ -59,7 +59,7 @@ export default function HomePage() {
                   Find Your Ideal College
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
-                  Enter your TGEAPCET-2024 rank details and preferences to predict your best college match.
+                  Enter your TGEAPCET-2025 rank details and preferences to predict your best college match.
                 </CardDescription>
               </CardHeader>
               <CardContent>
