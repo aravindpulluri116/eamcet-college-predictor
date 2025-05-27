@@ -26,7 +26,7 @@ const CollegeDetailsSchema = z.object({
 
 const CollegeSummaryInputSchema = z.object({
   collegeDetails: CollegeDetailsSchema.describe('Details of the college to summarize.'),
-  userPreferences: z.string().describe("A string combining the user's stated preferences (e.g., location, fees, specific courses, or 'None explicitly stated' if empty) and their selected branch preferences (e.g., 'Branch preferences: The user is open to all branches.' or 'Branch preferences: The user is interested in CSE, ECE.' etc.)."),
+  userPreferences: z.string().describe("A string combining the user's stated preferences (e.g., 'User's stated preferences: \"I prefer colleges in Hyderabad with good placement records.\"') and their selected branch preferences (e.g., 'Branch preferences: The user is interested in CSE, ECE.' or 'Branch preferences: The user is open to all branches.'). If no specific preferences are stated by the user, this part will be 'User's stated preferences: \"None explicitly stated\"'.").min(1),
 });
 
 export type CollegeSummaryInput = z.infer<typeof CollegeSummaryInputSchema>;
@@ -89,5 +89,4 @@ const collegeSummaryFlow = ai.defineFlow(
     return output!;
   }
 );
-
     
