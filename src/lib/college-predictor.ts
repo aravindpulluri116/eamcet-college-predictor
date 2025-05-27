@@ -42,7 +42,7 @@ function parseRank(rankStr: string | number | undefined | null): number | null {
   }
   if (typeof rankStr === 'string') {
     const trimmedRankStr = rankStr.trim();
-    if (trimmedRankStr.toUpperCase() === "NA" || trimmedRankStr === "" || trimmedRankStr === "-") { 
+    if (trimmedRankStr.toUpperCase() === "NA" || trimmedRankStr === "" || trimmedRankStr === "-") {
       return null;
     }
     const parsed = parseInt(trimmedRankStr, 10);
@@ -58,7 +58,7 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
       row &&
       typeof row["TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE"] === 'string' &&
       row["TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE"] !== "Inst\n Code" &&
-      row["Column2"] !== "Disclaimer:" 
+      row["Column2"] !== "Disclaimer:"
     );
 
   const rankJsonAccessKey = getActualRankColumnKey(userInput.rankCategory, userInput.gender);
@@ -69,7 +69,7 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
   }
 
   const displayRankCategoryUsed = getDisplayRankColumnName(userInput.rankCategory, userInput.gender);
-  
+
   const userSelectedNormalizedBranches = userInput.branches.map(normalizeBranchName);
   const selectAllBranches = userSelectedNormalizedBranches.includes(ALL_BRANCHES_IDENTIFIER);
 
@@ -84,9 +84,9 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
       };
     })
     .filter(college => {
-      const collegeBranchName = college["Column9"]; 
+      const collegeBranchName = college["Column9"];
       const normalizedCollegeBranchName = normalizeBranchName(collegeBranchName);
-      
+
       const branchNameMatches = selectAllBranches || userSelectedNormalizedBranches.includes(normalizedCollegeBranchName);
 
       return branchNameMatches &&
@@ -103,10 +103,10 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
   const mappedQualifiedColleges: PredictedCollege[] = qualifiedCollegesRaw.map(collegeRaw => {
     const instCode = String(collegeRaw["TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE"] || "N/A");
     const collegeName = String(collegeRaw["Column2"] || "N/A");
-    const tuitionFee = String(collegeRaw["Column28"] || "N/A"); 
+    const tuitionFee = String(collegeRaw["Column28"] || "N/A");
     const place = String(collegeRaw["Column3"] || "N/A");
     const district = String(collegeRaw["Column4"] || "N/A");
-    const branchName = String(collegeRaw["Column9"] || "N/A"); 
+    const branchName = String(collegeRaw["Column9"] || "N/A");
 
     return {
       instCode,
@@ -123,5 +123,9 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
     };
   });
 
-  return mappedQualifiedColleges.slice(0, 20); 
+  const limit = (userInput.numberOfColleges && userInput.numberOfColleges > 0 && userInput.numberOfColleges <= 50)
+                ? userInput.numberOfColleges
+                : 20;
+
+  return mappedQualifiedColleges.slice(0, limit);
 }

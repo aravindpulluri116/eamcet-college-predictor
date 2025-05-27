@@ -37,14 +37,15 @@ export interface UserInput {
   rankCategory: "OC" | "BC_A" | "BC_B" | "BC_C" | "BC_D" | "BC_E" | "SC" | "ST" | "EWS";
   gender: "BOYS" | "GIRLS";
   branches: string[];
+  numberOfColleges?: number;
 }
 
 export interface PredictedCollege {
   instCode: string;
   collegeName: string;
   tuitionFee: string;
-  cutoffRank: number; 
-  parsedCutoffRankDisplay: string; 
+  cutoffRank: number;
+  parsedCutoffRankDisplay: string;
   location: {
     place: string;
     district: string;

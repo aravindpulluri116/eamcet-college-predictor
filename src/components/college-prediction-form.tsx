@@ -44,6 +44,13 @@ const formSchema = z.object({
     required_error: "Please select a gender.",
   }).refine(value => value !== "", { message: "Please select a gender." }),
   branches: z.array(z.string()).refine(value => value.length > 0, { message: "Please select at least one branch or 'All Branches'." }),
+  numberOfColleges: z.coerce
+    .number({invalid_type_error: "Please enter a valid number." })
+    .positive({ message: "Number of colleges must be positive." })
+    .int({ message: "Number of colleges must be a whole number." })
+    .min(1, { message: "Minimum 1 college." })
+    .max(50, { message: "Maximum 50 colleges." })
+    .optional(),
 });
 
 type CollegePredictionFormValues = z.infer<typeof formSchema>;
@@ -62,12 +69,14 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
       rankCategory: "",
       gender: "",
       branches: [],
+      numberOfColleges: 20,
     },
   });
 
   const handleFormSubmit = (values: CollegePredictionFormValues) => {
     const userInput: UserInput = {
       ...values,
+      numberOfColleges: values.numberOfColleges ?? 20, // Ensure a default if undefined
     };
     onSubmit(userInput);
   };
@@ -89,7 +98,14 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
         duration: 5000,
       });
     }
-     // You can add more specific toasts for other fields if needed
+    if (errors.numberOfColleges) {
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: errors.numberOfColleges.message || "Invalid number of colleges.",
+        duration: 5000,
+      });
+    }
   };
 
   const selectedBranches = form.watch("branches");
@@ -174,6 +190,29 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
               </FormItem>
             )}
           />
+          
+          <FormField
+            control={form.control}
+            name="numberOfColleges"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Number of Colleges to Fetch</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="e.g., 20"
+                    {...field}
+                    value={field.value ?? 20}
+                    onChange={e => field.onChange(parseInt(e.target.value, 10))}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Enter a number between 1 and 50 (default: 20).
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={form.control}
@@ -201,7 +240,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
                       onCheckedChange={(isChecked) => {
                         field.onChange(isChecked ? [ALL_BRANCHES_IDENTIFIER] : []);
                       }}
-                      onSelect={(e) => e.preventDefault()} // Keep menu open
+                      onSelect={(e) => e.preventDefault()}
                     >
                       All Branches
                     </DropdownMenuCheckboxItem>
@@ -219,7 +258,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
                             field.onChange(currentSelection.filter((b) => b !== branchName));
                           }
                         }}
-                        onSelect={(e) => e.preventDefault()} // Keep menu open
+                        onSelect={(e) => e.preventDefault()}
                       >
                         {branchName}
                       </DropdownMenuCheckboxItem>
