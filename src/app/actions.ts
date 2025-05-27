@@ -30,14 +30,13 @@ export async function getCollegePrediction(userInput: UserInput): Promise<Predic
       branch: branchForAnalysis,
     };
 
-    let finalPreferencesString = `User's stated preferences: "${userInput.userPreferences || 'None explicitly stated'}".`;
-
+    let branchPreferencesString = "";
     if (userInput.branches.includes(ALL_BRANCHES_IDENTIFIER)) {
-        finalPreferencesString += " Branch preferences: The user is open to all branches.";
+        branchPreferencesString = "Branch preferences: The user is open to all branches.";
     } else if (userInput.branches.length > 1) {
-        finalPreferencesString += ` Branch preferences: The user is interested in the following branches: ${userInput.branches.join(', ')}.`;
-    } else if (userInput.branches.length === 1 && userInput.branches[0]) { // Ensure the single branch is not an empty string
-        finalPreferencesString += ` Branch preferences: The user's primary preferred branch is ${userInput.branches[0]}.`;
+        branchPreferencesString = `Branch preferences: The user is interested in the following branches: ${userInput.branches.join(', ')}.`;
+    } else if (userInput.branches.length === 1 && userInput.branches[0]) { 
+        branchPreferencesString = `Branch preferences: The user's primary preferred branch is ${userInput.branches[0]}.`;
     }
 
 
@@ -52,7 +51,7 @@ export async function getCollegePrediction(userInput: UserInput): Promise<Predic
           district: topCollege.location.district,
         },
       },
-      userPreferences: finalPreferencesString,
+      userPreferences: branchPreferencesString,
     };
     
     try {
@@ -78,4 +77,3 @@ export async function getCollegePrediction(userInput: UserInput): Promise<Predic
     return { error: "An unexpected error occurred. Please try again." };
   }
 }
-

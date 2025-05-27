@@ -29,31 +29,28 @@ export interface CollegeRawData {
   "Column27"?: string | number; // EWS GIRLS OU (EWS GIRLS)
   "Column28"?: string | number; // Tuition Fee
   "Column29"?: string | number; // Affiliated To
-  // Adding this to allow for any other unexpected keys without breaking typing,
-  // though ideally all used keys should be explicitly defined.
-  [key: string]: string | number | undefined | null; // Added null to handle potential null values from JSON
+  [key: string]: string | number | undefined | null;
 }
 
 export interface UserInput {
   userRank: number;
   rankCategory: "OC" | "BC_A" | "BC_B" | "BC_C" | "BC_D" | "BC_E" | "SC" | "ST" | "EWS";
   gender: "BOYS" | "GIRLS";
-  branches: string[]; // Changed from branch: string
-  userPreferences: string;
+  branches: string[];
 }
 
 export interface PredictedCollege {
   instCode: string;
   collegeName: string;
   tuitionFee: string;
-  cutoffRank: number; // Storing as number after parsing
-  parsedCutoffRankDisplay: string; // Original string value of cutoff for display
+  cutoffRank: number; 
+  parsedCutoffRankDisplay: string; 
   location: {
     place: string;
     district: string;
   };
   branchName: string;
-  rankCategoryUsed: string; // e.g. "OC BOYS"
+  rankCategoryUsed: string;
 }
 
 export interface PredictionResult {

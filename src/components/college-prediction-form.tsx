@@ -30,7 +30,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Textarea } from "@/components/ui/textarea";
 import { RANK_CATEGORIES, GENDERS, BRANCHES, ALL_BRANCHES_IDENTIFIER } from "@/lib/constants";
 import type { UserInput } from "@/types";
 import { ChevronDown } from "lucide-react";
@@ -44,7 +43,6 @@ const formSchema = z.object({
     required_error: "Please select a gender.",
   }).refine(value => value !== "", { message: "Please select a gender." }),
   branches: z.array(z.string()).refine(value => value.length > 0, { message: "Please select at least one branch or 'All Branches'." }),
-  userPreferences: z.string().min(10, { message: "Please describe your preferences (min 10 characters)." }).max(500, { message: "Preferences cannot exceed 500 characters." }),
 });
 
 type CollegePredictionFormValues = z.infer<typeof formSchema>;
@@ -62,14 +60,12 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
       rankCategory: "",
       gender: "",
       branches: [],
-      userPreferences: "",
     },
   });
 
   const handleFormSubmit = (values: CollegePredictionFormValues) => {
     const userInput: UserInput = {
       ...values,
-      // rankCategory and gender enums are correctly inferred
     };
     onSubmit(userInput);
   };
@@ -114,7 +110,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Rank Category</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select onValueChange={field.onChange} value={field.value || ""}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your rank category" />
@@ -138,7 +134,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Gender</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select onValueChange={field.onChange} value={field.value || ""}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your gender" />
@@ -213,26 +209,6 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
             )}
           />
         </div>
-        <FormField
-            control={form.control}
-            name="userPreferences"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Your Preferences</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="e.g., I prefer colleges in Hyderabad, with good placement records, and lower fees."
-                    className="resize-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Help us understand what you're looking for in a college (location, fees, courses, etc.). This will be used for AI-powered summary.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         <Button type="submit" disabled={isLoading} className="w-full md:w-auto">
           {isLoading ? "Predicting..." : "Predict College"}
         </Button>
@@ -240,5 +216,3 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
     </Form>
   );
 }
-
-    

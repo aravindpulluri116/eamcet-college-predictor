@@ -3,7 +3,7 @@
 
 /**
  * @fileOverview Summarizes the key aspects of a predicted college, including its pros, cons,
- * and suitability for a student based on their preferences.
+ * and suitability for a student based on their selected branch preferences.
  *
  * - collegeSummary - A function that generates a summary of a college based on its details.
  * - CollegeSummaryInput - The input type for the collegeSummary function.
@@ -26,13 +26,13 @@ const CollegeDetailsSchema = z.object({
 
 const CollegeSummaryInputSchema = z.object({
   collegeDetails: CollegeDetailsSchema.describe('Details of the college to summarize.'),
-  userPreferences: z.string().describe("A string combining the user's stated preferences (e.g., 'User's stated preferences: \"I prefer colleges in Hyderabad with good placement records.\"') and their selected branch preferences (e.g., 'Branch preferences: The user is interested in CSE, ECE.' or 'Branch preferences: The user is open to all branches.'). If no specific preferences are stated by the user, this part will be 'User's stated preferences: \"None explicitly stated\"'.").min(1),
+  userPreferences: z.string().describe("A string detailing the user's branch preferences (e.g., 'Branch preferences: The user is interested in CSE, ECE.' or 'Branch preferences: The user is open to all branches.' or 'Branch preferences: The user's primary preferred branch is CSE.') This will be an empty string if no branch preferences were effectively selected.").min(0),
 });
 
 export type CollegeSummaryInput = z.infer<typeof CollegeSummaryInputSchema>;
 
 const CollegeSummaryOutputSchema = z.object({
-  summary: z.string().describe('A summarized description of the college, highlighting its best features, potential drawbacks, and overall suitability based on user preferences. If user preferences are "None explicitly stated", focus on general strengths and weaknesses. Make sure to incorporate any specific branch preferences mentioned into the suitability assessment.'),
+  summary: z.string().describe('A summarized description of the college, highlighting its best features, potential drawbacks, and overall suitability based on the provided branch preferences. If the userPreferences string is empty or indicates no specific branch interest, focus on general strengths and weaknesses. Make sure to incorporate any specific branch preferences mentioned into the suitability assessment.'),
 });
 
 export type CollegeSummaryOutput = z.infer<typeof CollegeSummaryOutputSchema>;
@@ -45,7 +45,7 @@ const collegeSummaryPrompt = ai.definePrompt({
   name: 'collegeSummaryPrompt',
   input: {schema: CollegeSummaryInputSchema},
   output: {schema: CollegeSummaryOutputSchema},
-  prompt: `You are an expert college advisor. Your primary task is to provide a personalized summary of the following college, assessing its suitability **specifically for this student** based on their provided preferences.
+  prompt: `You are an expert college advisor. Your primary task is to provide a summary of the following college, assessing its suitability **specifically for this student** based on their selected branch preferences.
 
 College Details:
 Institute Code: {{{collegeDetails.instCode}}}
@@ -54,25 +54,17 @@ Tuition Fee: {{{collegeDetails.tuitionFee}}}
 Cutoff Rank: {{{collegeDetails.cutoffRank}}}
 Location: {{{collegeDetails.location.place}}}, {{{collegeDetails.location.district}}}
 
-User Preferences and Branch Selection: {{{userPreferences}}}
+Branch Preferences: {{{userPreferences}}}
 
 Instructions for your summary:
-1.  **Prioritize Personalization:**
-    *   If the "User's stated preferences" part of \`{{{userPreferences}}}\` is NOT "None explicitly stated", you **MUST** heavily weigh these stated preferences.
-    *   Explicitly address how the college's features (location, fees, reputation, specific programs if known) align or misalign with these stated desires. For example, if the user prefers "lower fees," comment on how the college's tuition fee fits this. If they prefer "good placement records," mention this aspect if known, or state if it's not specified in the details.
-    *   If the user mentions specific course interests (beyond the main branch), try to relate that if possible, or note if the college is known/not known for those.
+1.  **Address Branch Preferences:**
+    *   Incorporate the "Branch preferences" part of \`{{{userPreferences}}}\` by discussing the college's general suitability for the specified branch(es). If \`{{{userPreferences}}}\` is empty or does not clearly state a branch interest, provide a general summary.
 
-2.  **Address Branch Preferences:**
-    *   Incorporate the "Branch preferences" part of \`{{{userPreferences}}}\` by discussing the college's general suitability for the specified branch(es).
+2.  **Balanced Perspective:**
+    *   Highlight the college's best features and potential drawbacks.
 
-3.  **Balanced Perspective:**
-    *   Highlight the college's best features and potential drawbacks from the student's perspective.
-
-4.  **"None Explicitly Stated" Case:**
-    *   If the "User's stated preferences" part of \`{{{userPreferences}}}\` IS "None explicitly stated", then provide a more general summary of the college's strengths and weaknesses, still considering the specified branch preferences for suitability.
-
-5.  **Overall Assessment:**
-    *   Conclude with a clear overall assessment of how good a fit this college might be for the student, based on the personalized analysis. Be direct.
+3.  **Overall Assessment:**
+    *   Conclude with a clear overall assessment of how good a fit this college might be for the student, based on the college details and their branch preferences. Be direct.
 
 Generate the summary based on ALL the information provided.
 `,
@@ -89,4 +81,3 @@ const collegeSummaryFlow = ai.defineFlow(
     return output!;
   }
 );
-    
