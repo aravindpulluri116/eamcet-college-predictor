@@ -3,7 +3,7 @@
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldErrors } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -33,6 +33,7 @@ import {
 import { RANK_CATEGORIES, GENDERS, BRANCHES, ALL_BRANCHES_IDENTIFIER } from "@/lib/constants";
 import type { UserInput } from "@/types";
 import { ChevronDown } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   userRank: z.coerce.number().positive({ message: "Rank must be a positive number." }),
@@ -53,6 +54,7 @@ interface CollegePredictionFormProps {
 }
 
 export function CollegePredictionForm({ onSubmit, isLoading }: CollegePredictionFormProps) {
+  const { toast } = useToast();
   const form = useForm<CollegePredictionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,6 +72,24 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
     onSubmit(userInput);
   };
 
+  const handleValidationErrors = (errors: FieldErrors<CollegePredictionFormValues>) => {
+    if (errors.rankCategory) {
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: errors.rankCategory.message || "Please select a rank category.",
+      });
+    }
+    if (errors.branches) {
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: errors.branches.message || "Please select at least one branch.",
+      });
+    }
+     // You can add more specific toasts for other fields if needed
+  };
+
   const selectedBranches = form.watch("branches");
 
   const getBranchButtonLabel = () => {
@@ -81,7 +101,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(handleFormSubmit, handleValidationErrors)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
