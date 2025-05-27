@@ -90,7 +90,7 @@ export default function HomePage() {
       </main>
       <footer className="py-6 text-center text-muted-foreground border-t">
         <div className="container flex flex-col md:flex-row justify-between items-center">
-          <p>© {new Date().getFullYear()} EAMCET College Predictor. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Aravind Pulluri. All rights reserved.</p>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 mt-4 md:mt-0">
             <a
               href="https://www.instagram.com/techy.aravind/"
