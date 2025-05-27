@@ -1,21 +1,37 @@
-export interface CollegeRawData {
-  [key: string]: string | number | undefined; // Allows for dynamic rank category keys
-  "Inst Code": string;
-  "Institute Name": string;
-  "Place": string;
-  "Dist Code": "HYD" | "RRD" | string; // Making it more specific with known codes, but open
-  "Co Education": string;
-  "College Type": string;
-  "Year of Estab": string; // Could be number, but keeping as string from dataset
-  "Branch Code": string;
-  "Branch Name": "COMPUTER SCIENCE AND ENGINEERING" | "ELECTRONICS AND COMMUNICATION ENGINEERING" | "INFORMATION TECHNOLOGY" | "MECHANICAL ENGINEERING" | "CIVIL ENGINEERING" | "ELECTRICAL AND ELECTRONICS ENGINEERING" | string;
-  "Tuition Fee": string; // Could be number
-  "Affiliated To": string;
-  // Rank columns like "OC BOYS", "BC_A GIRLS" will be accessed dynamically
-}
 
-export interface CollegeDataset {
-  "TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE": CollegeRawData[];
+export interface CollegeRawData {
+  "TGEAPCET-2024 LAST RANK STATEMENT FIRST PHASE"?: string | number; // Inst Code
+  "Column2"?: string | number;  // Institute Name
+  "Column3"?: string | number;  // Place
+  "Column4"?: string | number;  // Dist Code
+  "Column5"?: string | number;  // Co Education
+  "Column6"?: string | number;  // College Type
+  "Column7"?: string | number;  // Year of Estab
+  "Column8"?: string | number;  // Branch Code
+  "Column9"?: string | number;  // Branch Name
+  "Column10"?: string | number; // OC BOYS
+  "Column11"?: string | number; // OC GIRLS
+  "Column12"?: string | number; // BC_A BOYS
+  "Column13"?: string | number; // BC_A GIRLS
+  "Column14"?: string | number; // BC_B BOYS
+  "Column15"?: string | number; // BC_B GIRLS
+  "Column16"?: string | number; // BC_C BOYS
+  "Column17"?: string | number; // BC_C GIRLS
+  "Column18"?: string | number; // BC_D BOYS
+  "Column19"?: string | number; // BC_D GIRLS
+  "Column20"?: string | number; // BC_E BOYS
+  "Column21"?: string | number; // BC_E GIRLS
+  "Column22"?: string | number; // SC BOYS
+  "Column23"?: string | number; // SC GIRLS
+  "Column24"?: string | number; // ST BOYS
+  "Column25"?: string | number; // ST GIRLS
+  "Column26"?: string | number; // EWS GEN OU (EWS BOYS)
+  "Column27"?: string | number; // EWS GIRLS OU (EWS GIRLS)
+  "Column28"?: string | number; // Tuition Fee
+  "Column29"?: string | number; // Affiliated To
+  // Adding this to allow for any other unexpected keys without breaking typing,
+  // though ideally all used keys should be explicitly defined.
+  [key: string]: string | number | undefined;
 }
 
 export interface UserInput {
