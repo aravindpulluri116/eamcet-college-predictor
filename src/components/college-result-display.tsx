@@ -36,7 +36,7 @@ export function CollegeResultDisplay({ result }: CollegeResultDisplayProps) {
     <div className="mt-8 space-y-6">
       <h3 className="text-xl font-semibold mb-4 text-center flex items-center justify-center">
         <ListChecks className="mr-2 h-6 w-6 text-primary" />
-        {colleges.length === 1 ? "Your Predicted College Match" : `Your Top ${colleges.length} College Matches`}
+        {colleges.length === 1 ? "Your Predicted College Match" : `Your Top ${colleges.length > 20 ? 20 : colleges.length} College Matches`}
       </h3>
       
       {colleges.map((college, index) => (
@@ -49,8 +49,8 @@ export function CollegeResultDisplay({ result }: CollegeResultDisplayProps) {
             {index === 0 && <CardDescription>This is the top predicted college based on your inputs.</CardDescription>}
             {index > 0 && <CardDescription>Another potential match for you.</CardDescription>}
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          <CardContent className="space-y-4 pt-4"> {/* Added pt-4 for slight padding from header */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm"> {/* Increased gap slightly */}
               <div className="flex items-start">
                 <Code className="h-5 w-5 mr-2 text-muted-foreground flex-shrink-0 mt-0.5" />
                 <span className="flex-grow">EAMCET Code: <Badge variant="outline">{college.instCode}</Badge></span>

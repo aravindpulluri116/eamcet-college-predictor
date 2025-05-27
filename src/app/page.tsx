@@ -10,6 +10,7 @@ import { SiteHeader } from "@/components/site-header";
 import { LoadingSpinner } from "@/components/loader";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function HomePage() {
   const [predictionResult, setPredictionResult] = useState<PredictionResult | null>(null);
@@ -51,13 +52,19 @@ export default function HomePage() {
       <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
         <div className="max-w-3xl mx-auto">
           <section aria-labelledby="form-section-title" className="mb-12">
-            <h1 id="form-section-title" className="text-3xl font-bold tracking-tight text-center mb-2 text-primary">
-              Find Your Ideal College
-            </h1>
-            <p className="text-center text-muted-foreground mb-8">
-              Enter your TGEAPCET-2024 rank details and preferences to predict your best college match.
-            </p>
-            <CollegePredictionForm onSubmit={handleFormSubmit} isLoading={isLoading} />
+            <Card className="shadow-lg">
+              <CardHeader className="text-center">
+                <CardTitle id="form-section-title" className="text-3xl font-bold tracking-tight text-primary mb-2">
+                  Find Your Ideal College
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Enter your TGEAPCET-2024 rank details and preferences to predict your best college match.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CollegePredictionForm onSubmit={handleFormSubmit} isLoading={isLoading} />
+              </CardContent>
+            </Card>
           </section>
 
           {isLoading && (
@@ -88,4 +95,3 @@ export default function HomePage() {
     </div>
   );
 }
-
