@@ -91,24 +91,26 @@ export default function HomePage() {
       <footer className="py-6 text-center text-muted-foreground border-t">
         <div className="container flex flex-col md:flex-row justify-between items-center">
           <p>© {new Date().getFullYear()} College Compass. All rights reserved.</p>
-          <div className="flex space-x-4 mt-4 md:mt-0">
+          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 mt-4 md:mt-0">
             <a
               href="https://www.instagram.com/techy.aravind/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-primary transition-colors flex items-center justify-center md:justify-start"
               aria-label="Instagram"
             >
               <Instagram className="h-5 w-5" />
+              <span className="ml-2">Techy Aravind</span>
             </a>
             <a
               href="https://www.linkedin.com/in/aravind-pulluri-101291334/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-primary transition-colors flex items-center justify-center md:justify-start"
               aria-label="LinkedIn"
             >
               <Linkedin className="h-5 w-5" />
+              <span className="ml-2">Aravind Pulluri</span>
             </a>
           </div>
         </div>
