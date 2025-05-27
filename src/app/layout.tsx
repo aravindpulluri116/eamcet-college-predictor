@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'College Compass',
   description: 'Predict your college based on TGEAPCET-2024 ranks',
+  icons: null, // Explicitly disable automatic icon handling
 };
 
 export default function RootLayout({
