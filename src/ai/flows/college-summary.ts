@@ -26,13 +26,13 @@ const CollegeDetailsSchema = z.object({
 
 const CollegeSummaryInputSchema = z.object({
   collegeDetails: CollegeDetailsSchema.describe('Details of the college to summarize.'),
-  userPreferences: z.string().describe('The user preferences for college, such as location, fees and courses.'),
+  userPreferences: z.string().describe("A string combining the user's stated preferences (e.g., location, fees, specific courses, or 'None explicitly stated' if empty) and their selected branch preferences (e.g., 'Branch preferences: The user is open to all branches.' or 'Branch preferences: The user is interested in CSE, ECE.' etc.)."),
 });
 
 export type CollegeSummaryInput = z.infer<typeof CollegeSummaryInputSchema>;
 
 const CollegeSummaryOutputSchema = z.object({
-  summary: z.string().describe('A summarized description of the college, highlighting its best features, potential drawbacks, and overall suitability based on user preferences.'),
+  summary: z.string().describe('A summarized description of the college, highlighting its best features, potential drawbacks, and overall suitability based on user preferences. If user preferences are "None explicitly stated", focus on general strengths and weaknesses. Make sure to incorporate any specific branch preferences mentioned into the suitability assessment.'),
 });
 
 export type CollegeSummaryOutput = z.infer<typeof CollegeSummaryOutputSchema>;
@@ -54,7 +54,9 @@ Tuition Fee: {{{collegeDetails.tuitionFee}}}
 Cutoff Rank: {{{collegeDetails.cutoffRank}}}
 Location: {{{collegeDetails.location.place}}}, {{{collegeDetails.location.district}}}
 
-User Preferences: {{{userPreferences}}}`,
+User Preferences: {{{userPreferences}}}
+
+Based on ALL the information provided in "User Preferences" (including stated preferences and branch preferences), generate the summary. If the stated preferences part is "None explicitly stated", then focus the summary on general aspects and the suitability for the specified branch preferences.`,
 });
 
 const collegeSummaryFlow = ai.defineFlow(
@@ -68,3 +70,4 @@ const collegeSummaryFlow = ai.defineFlow(
     return output!;
   }
 );
+
