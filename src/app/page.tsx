@@ -56,7 +56,7 @@ export default function HomePage() {
             <Card className="shadow-lg transition-all duration-200 ease-in-out hover:shadow-xl">
               <CardHeader className="text-center">
                 <CardTitle id="form-section-title" className="text-3xl font-bold tracking-tight text-primary mb-2">
-                  Find Your Ideal College
+                  Find Your Best College
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
                   Enter your TGEAPCET-2025 rank details and preferences to predict your best college match.
