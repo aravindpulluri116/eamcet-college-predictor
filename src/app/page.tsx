@@ -53,12 +53,12 @@ export default function HomePage() {
       <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
         <div className="max-w-3xl mx-auto">
           <section aria-labelledby="form-section-title" className="mb-12 animate-fade-in-up">
-            <Card className="shadow-lg transition-all duration-200 ease-in-out hover:shadow-xl">
+            <Card className="shadow-[0_10px_20px_rgba(0,0,0,0.15)] bg-gradient-to-br from-white to-blue-50 transition-all duration-300 ease-in-out hover:shadow-[0_20px_30px_rgba(0,0,0,0.2)] hover:translate-y-[-2px] rounded-2xl border-2 border-blue-100">
               <CardHeader className="text-center">
-                <CardTitle id="form-section-title" className="text-3xl font-bold tracking-tight text-primary mb-2">
+                <CardTitle id="form-section-title" className="text-4xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2 drop-shadow-sm py-2">
                   Find Your Best College
                 </CardTitle>
-                <CardDescription className="text-muted-foreground">
+                <CardDescription className="text-slate-600 text-lg">
                   Enter your TGEAPCET-2025 rank details and preferences to predict your best college match.
                 </CardDescription>
               </CardHeader>
@@ -79,10 +79,12 @@ export default function HomePage() {
             <>
             <Separator className="my-8" />
             <section aria-labelledby="results-section-title" className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <h2 id="results-section-title" className="text-2xl font-semibold tracking-tight text-center mb-6">
+              <h2 id="results-section-title" className="text-3xl font-bold tracking-tight text-center mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Prediction Results
               </h2>
-              <CollegeResultDisplay result={predictionResult} />
+              <div className="transform hover:scale-[1.02] transition-all duration-300">
+                <CollegeResultDisplay result={predictionResult} />
+              </div>
             </section>
             </>
           )}
