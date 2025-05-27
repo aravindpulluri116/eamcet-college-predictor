@@ -89,9 +89,9 @@ export default function HomePage() {
         </div>
       </main>
       <footer className="py-6 text-center text-muted-foreground border-t">
-        <div className="container flex flex-col md:flex-row justify-between items-center">
+        <div className="container flex flex-col md:flex-row md:justify-center items-center space-y-4 md:space-y-0 md:gap-x-12">
           <p>© {new Date().getFullYear()} Aravind Pulluri. All rights reserved.</p>
-          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 mt-4 md:mt-0">
+          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6">
             <a
               href="https://www.instagram.com/techy.aravind/"
               target="_blank"
