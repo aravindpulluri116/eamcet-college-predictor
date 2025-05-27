@@ -16,7 +16,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'EAMCET College Predictor',
   description: 'Predict your college with the EAMCET College Predictor based on TGEAPCET-2024 ranks',
-  icons: null, // Explicitly disable automatic icon handling
+  icons: [
+    {
+      rel: 'icon',
+      url: '/favicon.png',
+    },
+  ],
 };
 
 export default function RootLayout({
