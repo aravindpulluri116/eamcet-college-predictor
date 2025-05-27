@@ -30,10 +30,10 @@ const formSchema = z.object({
   userRank: z.coerce.number().positive({ message: "Rank must be a positive number." }),
   rankCategory: z.enum(RANK_CATEGORIES as [string, ...string[]], {
     required_error: "Please select a rank category.",
-  }),
-  gender: z.enum(["BOYS", "GIRLS"], {
+  }).refine(value => value !== "", { message: "Please select a rank category." }),
+  gender: z.enum(["BOYS", "GIRLS"] as [string, ...string[]], { // Added [string, ...string[]] type assertion for Zod enum with non-empty array
     required_error: "Please select a gender.",
-  }),
+  }).refine(value => value !== "", { message: "Please select a gender." }),
   branch: z.string().min(1, { message: "Please select or enter a branch." }),
   userPreferences: z.string().min(10, { message: "Please describe your preferences (min 10 characters)." }).max(500, { message: "Preferences cannot exceed 500 characters." }),
 });
@@ -49,9 +49,9 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
   const form = useForm<CollegePredictionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userRank: undefined, // react-hook-form will handle undefined internally
-      rankCategory: undefined,
-      gender: undefined,
+      userRank: undefined, 
+      rankCategory: "", // Initialize with empty string
+      gender: "", // Initialize with empty string
       branch: "",
       userPreferences: "",
     },
@@ -61,7 +61,8 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
     // Ensure rankCategory and gender are correctly typed for UserInput
     const userInput: UserInput = {
       ...values,
-      rankCategory: values.rankCategory as UserInput['rankCategory'],
+      // Zod schema ensures these are valid non-empty strings if form is valid
+      rankCategory: values.rankCategory as UserInput['rankCategory'], 
       gender: values.gender as UserInput['gender'],
     };
     onSubmit(userInput);
@@ -82,7 +83,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
                     type="number"
                     placeholder="Enter your TGEAPCET rank"
                     {...field}
-                    value={field.value ?? ''} // Ensures input is controlled from the start
+                    value={field.value ?? ''} 
                   />
                 </FormControl>
                 <FormDescription>
@@ -98,7 +99,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Rank Category</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your rank category" />
@@ -122,7 +123,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Gender</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your gender" />
@@ -146,7 +147,7 @@ export function CollegePredictionForm({ onSubmit, isLoading }: CollegePrediction
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Preferred Branch</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your preferred branch" />
