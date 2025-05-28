@@ -31,6 +31,13 @@ export default function HomePage() {
           description: result.error,
           duration: 5000,
         });
+      } else {
+        toast({
+          title: "Important Notice",
+          description: "College predictions are based on TGEAPCET-2024 cutoff ranks. Actual cutoffs for 2025 may vary.",
+          duration: 8000,
+          className: "bg-blue-50 border-blue-200",
+        });
       }
     } catch (error) {
       console.error("Form submission error:", error);

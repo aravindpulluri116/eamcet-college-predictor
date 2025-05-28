@@ -88,9 +88,13 @@ export async function predictCollege(userInput: UserInput): Promise<PredictedCol
       const normalizedCollegeBranchName = normalizeBranchName(collegeBranchName);
 
       const branchNameMatches = selectAllBranches || userSelectedNormalizedBranches.includes(normalizedCollegeBranchName);
-
+      
+      // Show colleges with cutoff ranks starting from 500 positions lower than user's rank
+      const lowerRankThreshold = Math.max(1, userInput.userRank - 500);
+      
       return branchNameMatches &&
              college.cutoffRank !== null &&
+             lowerRankThreshold <= college.cutoffRank &&
              userInput.userRank <= college.cutoffRank;
     });
 
